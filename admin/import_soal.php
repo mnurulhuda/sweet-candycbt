@@ -1,7 +1,7 @@
 <?php
 $id_mapel = $_GET['id'];
-$mapelQ = mysqli_query($koneksi, "SELECT * FROM mapel where id_mapel='$id_mapel'");
-$mapel = mysqli_fetch_array($mapelQ);
+$mapelQ   = mysqli_query($koneksi, "SELECT * FROM mapel where id_mapel='$id_mapel'");
+$mapel    = mysqli_fetch_array($mapelQ);
 $cekmapel = mysqli_num_rows($mapelQ);
 ?>
 <div class='row'>
@@ -13,15 +13,15 @@ $cekmapel = mysqli_num_rows($mapelQ);
                     <h3 class='box-title'>Import Soal Excel</h3>
                     <div class='box-tools pull-right '>
                         <button type='submit' name='submit' class='btn btn-sm btn-flat btn-success'><i class='fa fa-check'></i> Import</button>
-                        <a href='?pg=<?= $pg ?>' class='btn btn-sm bg-maroon' title='Batal'><i class='fa fa-times'></i></a>
+                        <a href='?pg=<?=$pg?>' class='btn btn-sm bg-maroon' title='Batal'><i class='fa fa-times'></i></a>
                     </div>
                 </div><!-- /.box-header -->
                 <div class='box-body'>
-                    <?= $info ?>
+                    <?=$info?>
                     <div class='form-group'>
                         <label>Mata Pelajaran</label>
-                        <input type='hidden' name='id_mapel' class='form-control' value="<?= $mapel['id_mapel'] ?>" />
-                        <input type='text' name='mapel' class='form-control' value="<?= $mapel['nama'] ?>" disabled />
+                        <input type='hidden' name='id_mapel' class='form-control' value="<?=$mapel['id_mapel']?>" />
+                        <input type='text' name='mapel' class='form-control' value="<?=$mapel['nama']?>" disabled />
                     </div>
                     <div class='form-group'>
                         <label>Pilih File</label>
@@ -38,28 +38,28 @@ $cekmapel = mysqli_num_rows($mapelQ);
         </form>
     </div>
     <div class='col-md-6'>
-        <form id="formsoalword" action='<?= $homeurl ?>/admin/pages/word_import/import/index.php/word_import' method='post' enctype='multipart/form-data'>
+        <form id="formsoalword" action='<?=$homeurl?>/admin/import_word.php' method='post' enctype='multipart/form-data'>
             <div class='box box-solid'>
                 <div class='box-header with-border'>
                     <h3 class='box-title'>Import Soal Ms Word</h3>
                     <div class='box-tools pull-right '>
                         <button type='submit' name='submit' class='btn btn-sm btn-flat btn-success'><i class='fa fa-check'></i> Import</button>
-                        <a href='?pg=<?= $pg ?>' class='btn btn-sm bg-maroon' title='Batal'><i class='fa fa-times'></i></a>
+                        <a href='?pg=<?=$pg?>' class='btn btn-sm bg-maroon' title='Batal'><i class='fa fa-times'></i></a>
                     </div>
                 </div><!-- /.box-header -->
                 <div class='box-body'>
                     <div class='form-group'>
                         <label>Mata Pelajaran</label>
-                        <input type='hidden' name='id_mapel' class='form-control' value="<?= $mapel['id_mapel'] ?>" />
-                        <input type='text' name='mapel' class='form-control' value="<?= $mapel['nama'] ?>" disabled />
+                        <input type='hidden' name='id_mapel' class='form-control' value="<?=$mapel['id_mapel']?>" />
+                        <input type='text' name='mapel' class='form-control' value="<?=$mapel['nama']?>" disabled />
                     </div>
                     <tr>
                         <td>
-                            <input type='hidden' name='id_bank_soal' value=<?= $_REQUEST['id'] ?>>
+                            <input type='hidden' name='id_bank_soal' value=<?=$_REQUEST['id']?>>
                         </td>
                     </tr>
                     <tr>
-                        <td> <input type='hidden' name='id_lokal' value='<?= $homeurl ?>'></td>
+                        <td> <input type='hidden' name='id_lokal' value='<?=$homeurl?>'></td>
                     </tr>
                     <tr>
                         <td> <input type='hidden' name='cid' value='1'></td>
@@ -100,7 +100,7 @@ $cekmapel = mysqli_num_rows($mapelQ);
                     </p>
                 </div><!-- /.box-body -->
                 <div class='box-footer'>
-                    <a href='<?= $homeurl ?>/admin/pages/word_import/import/sample/sample.docx'><i class='fa fa-file-word-o'></i> Download Format</a>
+                    <a href='<?=$homeurl?>/admin/pages/word_import/import/sample/sample.docx'><i class='fa fa-file-word-o'></i> Download Format</a>
                 </div>
             </div><!-- /.box -->
         </form>
@@ -112,14 +112,14 @@ $cekmapel = mysqli_num_rows($mapelQ);
                     <h3 class='box-title'>Import Soal Excel (Bee)</h3>
                     <div class='box-tools pull-right '>
                         <button type='submit' name='importbee' class='btn btn-sm btn-flat btn-success'><i class='fa fa-check'></i> Import</button>
-                        <a href='?pg=<?= $pg ?>' class='btn btn-sm bg-maroon' title='Batal'><i class='fa fa-times'></i></a>
+                        <a href='?pg=<?=$pg?>' class='btn btn-sm bg-maroon' title='Batal'><i class='fa fa-times'></i></a>
                     </div>
                 </div><!-- /.box-header -->
                 <div class='box-body'>
                     <div class='form-group'>
                         <label>Mata Pelajaran</label>
-                        <input type='hidden' name='id_mapel' class='form-control' value="<?= $mapel['id_mapel'] ?>" />
-                        <input type='text' name='mapel' class='form-control' value="<?= $mapel['nama'] ?>" disabled />
+                        <input type='hidden' name='id_mapel' class='form-control' value="<?=$mapel['id_mapel']?>" />
+                        <input type='text' name='mapel' class='form-control' value="<?=$mapel['nama']?>" disabled />
                     </div>
                     <div class='form-group'>
                         <label>Pilih File</label>
@@ -161,10 +161,10 @@ $cekmapel = mysqli_num_rows($mapelQ);
                     Silahkan upload file pendukung soal seperti gambar dan audio ke dalam arsip bertipe zip setelah itu upload kesini dan komputer akan mengekstraknya ke dalam folder files <br />
                 </p>
                 <?php
-                if (isset($output)) {
-                    echo $output;
-                }
-                ?>
+if (isset($output)) {
+    echo $output;
+}
+?>
             </div>
         </div>
     </div>
@@ -179,7 +179,7 @@ $cekmapel = mysqli_num_rows($mapelQ);
     function notifygagal(pesan) {
         toastr.error(pesan);
     }
-    //IMPORT FILE PENDUKUNG 
+    //IMPORT FILE PENDUKUNG
     $('#formfilesoal').on('submit', function(e) {
         e.preventDefault();
         $.ajax({
@@ -204,7 +204,7 @@ $cekmapel = mysqli_num_rows($mapelQ);
         });
     });
 
-    //IMPORT FILE PENDUKUNG 
+    //IMPORT FILE PENDUKUNG
     $('#formsoalcandy').on('submit', function(e) {
         e.preventDefault();
         $.ajax({
@@ -245,4 +245,41 @@ $cekmapel = mysqli_num_rows($mapelQ);
             }
         });
     });
+
+    // IMPORT SOAL WORD
+    $('#formsoalword').on('submit', function(e){
+        $.ajax({
+            type: 'post',
+            url: 'import_word.php',
+            data: new FormData(this),
+            processData: false,
+            contentType: false,
+            cache: false,
+            beforeSend: function() {
+                $('.loader').css('display', 'block');
+            },
+            success: function(response) {
+                $('.loader').css('display', 'none');
+                $('#boxpesan').html(response);
+
+                var obj = jQuery.parseJSON( response );
+                if (obj.status == 1) {
+                    swal({
+                        type: 'success',
+                        title: 'Selamat!',
+                        text: obj.hasil
+                    }).then(function() {
+                        window.location = "index.php?pg=banksoal&ac=lihat&id="+obj.id_mapel;
+                    });
+                } else if (obj.status == 0) {
+                    swal({
+                        type: 'error',
+                        title: 'Oops...',
+                        text: obj.hasil
+                    })
+                }
+            }
+        });
+        return false;
+    })
 </script>
