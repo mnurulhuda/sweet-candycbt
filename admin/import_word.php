@@ -13,7 +13,7 @@ if ($_POST) {
     move_uploaded_file($tmp, $target_file);
 
     $question_split = "/Soal:[0-9]+\)/";
-    $option_split   = "/[A-Z]:/";
+    $option_split   = "/[A-E]:/";
     $correct_split  = "/Kunci:/";
     $audio_split    = "/Audio:/";
 
@@ -92,8 +92,14 @@ if ($_POST) {
         $expl     = array_values($expl);
         $explflag = get_numerics($content2);
 
+        // if (count($expl) < 40) {
+        //     echo json_encode(["status" => "0", "hasil" => "Jumlah soal kurang dari 40."]);
+        //     exit;
+        // }
+
         foreach ($expl as $ekey => $value) {
             $cqno = str_replace('Soal:', '', $explflag[$ekey]);
+            $cqno = str_replace(')', '', $cqno);
 
             if ($cqno != ($ekey + 1)) {
                 echo json_encode(["status" => "0", "hasil" => "Format soal salah pada soal nomor " . ($ekey + 1) . " atau soal tidak ditemukan."]);
@@ -106,6 +112,9 @@ if ($_POST) {
             $jpil = $jindex - 1;
             if (($jindex > 1) && ($jindex < ($j_opt + 1))) {
                 echo json_encode(["status" => "0", "hasil" => "Jumlah pilihan jawaban pada soal nomor " . $cqno . " hanya ada " . $jpil . ". Sedangkan di bank soal jumlah pilihan adalah " . $j_opt . "."]);
+                exit;
+            } else if ($jindex > $j_opt + 3) {
+                echo json_encode(["status" => "0", "hasil" => "Format soal salah pada soal nomor " . ($cqno + 1) . "."]);
                 exit;
             }
 
@@ -120,10 +129,10 @@ if ($_POST) {
 
                                 $options[$key_option] = $correct[0];
                                 $options['kunci']     = trim($correct[1]);
-                            } /* else {
-                        echo json_encode(["status" => "0", "hasil" => "Kunci jawaban pada soal nomor " . $cqno . " tidak ada."]);
-                        exit;
-                        } */
+                            } else {
+                                echo json_encode(["status" => "0", "hasil" => "Kunci jawaban pada soal nomor " . $cqno . " tidak ada."]);
+                                exit;
+                            }
                         } else if ($key_option == 0) {
                             if (preg_match($audio_split, $val_option, $match)) {
                                 $audio = array_filter(preg_split($audio_split, $val_option));
@@ -160,6 +169,14 @@ if ($_POST) {
         $hasil = ["status" => "0", "hasil" => "Gagal"];
     }
 
+    $mapel = mysqli_query($koneksi, "SELECT jml_soal FROM mapel WHERE id_mapel = $id_mapel");
+
+    $jml_soal = mysqli_fetch_array($mapel)[0];
+    if (count($quesions) < $jml_soal) {
+        echo json_encode(["status" => "0", "hasil" => "Jumlah soal kurang. Jumlah soal di bank soal = " . $jml_soal . ". Soal diimport = " . count($quesions) . "."]);
+        exit;
+    }
+
     $pg = 0;
     $es = 0;
     foreach ($quesions as $key => $value) {
@@ -189,7 +206,7 @@ if ($_POST) {
         }
         $exec = mysqli_query($koneksi, "INSERT INTO soal (id_mapel,nomor,soal,pilA,pilB,pilC,pilD,pilE,jawaban,jenis,file1) VALUES ('$id_mapel','$no','$value[0]','$value[1]','$value[2]','$value[3]','$value[4]','$value[5]','$value[kunci]','$jns','$value[audio]')");
     }
-    $hasil["hasil"] = "Jumlah Soal Pilihan Ganda = " . $pg . ". Jumlah soal Essay = " . $es;
+    $hasil["hasil"] = "Jumlah Soal Pilihan Ganda = " . $pg . ".\nJumlah soal Essai = " . $es;
     echo json_encode($hasil);
 } else {
     echo "404";
@@ -205,7 +222,7 @@ function xml_attribute($object, $attribute)
 
 function get_numerics($str)
 {
-    preg_match_all('/Soal:\d+/', $str, $matches);
+    preg_match_all('/Soal:\d+\)/', $str, $matches);
     return $matches[0];
 }
 

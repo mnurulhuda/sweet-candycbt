@@ -68,98 +68,104 @@ if (isset($_POST['tambahsoal'])):
     } elseif ($pengawas['level'] == 'guru') {
     if ($cek > 0):
         $pesan = "<div class='alert alert-warning alert-dismissible'>
-									            <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
-									            <i class='icon fa fa-info'></i>
-									            Maaf Kode Mapel - Level - Kelas Sudah ada !
-									          </div>";
+										            <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
+										            <i class='icon fa fa-info'></i>
+										            Maaf Kode Mapel - Level - Kelas Sudah ada !
+										          </div>";
     else:
         $exec  = mysqli_query($koneksi, "INSERT INTO mapel (idpk, nama, jml_soal,jml_esai,level,status,idguru,bobot_pg,bobot_esai,tampil_pg,tampil_esai,kelas,opsi) VALUES ('$id_pk','$nama','$jml_soal','$jml_esai','$level','$status','$id_pengawas','$bobot_pg','$bobot_esai','$tampil_pg','$tampil_esai','$kelas','$opsi')");
         $pesan = "<div class='alert alert-success alert-dismissible'>
-									            <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
-									            <i class='icon fa fa-info'></i>
-									            Data Berhasil ditambahkan ..
-									          </div>";
+										            <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
+										            <i class='icon fa fa-info'></i>
+										            Data Berhasil ditambahkan ..
+										          </div>";
     endif;
 }
 endif;
 
 ?>
-	<div class='row'>
-		<div class='col-md-12'><?=$pesan?>
-			<div class='box box-solid '>
-				<div class='box-header with-border '>
-					<h3 class='box-title'><i class='fa fa-briefcase'></i> Data Bank Soal</h3>
-					<div class='box-tools pull-right '>
-						<?php if ($setting['server'] == 'pusat'): ?>
-							<button id='btnhapusbank' class='btn btn-sm btn-danger'><i class='fa fa-trash'></i> <span class='hidden-xs'>Hapus</span></button>
-							<button class='btn btn-sm btn-flat btn-success' data-toggle='modal' data-target='#tambahbanksoal'><i class='glyphicon glyphicon-plus'></i> <span class='hidden-xs'>Tambah Bank Soal</span></button>
-						<?php endif?>
-					</div>
-				</div><!-- /.box-header -->
-				<div class='box-body'>
-					<div id='tablereset' class='table-responsive'>
-						<table id='example1' class='table table-bordered table-striped'>
-							<thead>
-								<tr>
-									<th width='5px'><input type='checkbox' id='ceksemua'></th>
-									<th width='5px'>#</th>
-									<th>Mata Pelajaran</th>
-									<th>Soal PG</th>
-									<th>Soal Esai</th>
-									<th>Kelas</th>
-									<th>Guru</th>
-									<th>Status</th>
-									<?php if ($setting['server'] == 'pusat'): ?>
-										<th></th>
-									<?php endif?>
-								</tr>
-							</thead>
-							<tbody>
-								<?php
+<div class='row'>
+    <div class='col-md-12'><?=$pesan?>
+        <div class='box box-solid '>
+            <div class='box-header with-border '>
+                <h3 class='box-title'><i class='fa fa-briefcase'></i> Data Bank Soal</h3>
+                <div class='box-tools pull-right '>
+                    <?php if ($setting['server'] == 'pusat'): ?>
+                    <button id='btnhapusbank' class='btn btn-sm btn-danger'><i class='fa fa-trash'></i> <span
+                            class='hidden-xs'>Hapus</span></button>
+                    <button class='btn btn-sm btn-flat btn-success' data-toggle='modal' data-target='#tambahbanksoal'><i
+                            class='glyphicon glyphicon-plus'></i> <span class='hidden-xs'>Tambah Bank
+                            Soal</span></button>
+                    <?php endif?>
+                </div>
+            </div><!-- /.box-header -->
+            <div class='box-body'>
+                <div id='tablereset' class='table-responsive'>
+                    <table id='example1' class='table table-bordered table-striped'>
+                        <thead>
+                            <tr>
+                                <th width='5px'><input type='checkbox' id='ceksemua'></th>
+                                <th width='5px'>#</th>
+                                <th>Mata Pelajaran</th>
+                                <th>Soal PG</th>
+                                <th>Soal Esai</th>
+                                <th>Kelas</th>
+                                <th>Guru</th>
+                                <th>Status</th>
+                                <?php if ($setting['server'] == 'pusat'): ?>
+                                <th></th>
+                                <?php endif?>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
 if ($pengawas['level'] == 'admin'):
-    $mapelQ = mysqli_query($koneksi, "SELECT * FROM mapel ORDER BY date ASC");
+    $mapelQ = mysqli_query($koneksi, "SELECT * FROM mapel ORDER BY id_mapel ASC");
 elseif ($pengawas['level'] == 'guru'):
     $mapelQ = mysqli_query($koneksi, "SELECT * FROM mapel WHERE idguru='$pengawas[id_pengawas]' ORDER BY date ASC");
 endif;
 ?>
-								<?php while ($mapel = mysqli_fetch_array($mapelQ)): ?>
-									<?php
+                            <?php while ($mapel = mysqli_fetch_array($mapelQ)): ?>
+                            <?php
 $cek = mysqli_num_rows(mysqli_query($koneksi, "SELECT * FROM soal WHERE id_mapel='$mapel[id_mapel]'"));
 $no++;
 ?>
-									<tr>
-										<td><input type='checkbox' name='cekpilih[]' class='cekpilih' id='cekpilih-$no' value="<?=$mapel['id_mapel']?>"></td>
-										<td><?=$no?></td>
-										<td>
-											<?php
+                            <tr>
+                                <td><input type='checkbox' name='cekpilih[]' class='cekpilih' id='cekpilih-$no'
+                                        value="<?=$mapel['id_mapel']?>"></td>
+                                <td><?=$no?></td>
+                                <td>
+                                    <?php
 if ($mapel['idpk'] == 'semua'):
     $jur = 'Semua';
 else:
     $jur = $mapel['idpk'];
 endif;
 ?>
-											<b><small class='label bg-purple'><?=$mapel['nama']?></small></b>
-											<small class='label label-primary'><?=$mapel['level']?></small>
-											<small class='label label-primary'><?=$jur?></small>
-										</td>
-										<td>
-											<small class='label label-warning'><?=$mapel['tampil_pg']?>/<?=$mapel['jml_soal']?></small>
-											<small class='label label-danger'><?=$mapel['bobot_pg']?> %</small>
-											<small class='label label-danger'><?=$mapel['opsi']?> opsi</small>
-										</td>
-										<td>
-											<small class='label label-warning'><?=$mapel['tampil_esai']?>/<?=$mapel['jml_esai']?></small>
-											<small class='label label-danger'><?=$mapel['bobot_esai']?> %</small>
-										</td>
-										<td>
-											<?php
+                                    <b><small class='label bg-purple'><?=$mapel['nama']?></small></b>
+                                    <small class='label label-primary'><?=$mapel['level']?></small>
+                                    <small class='label label-primary'><?=$jur?></small>
+                                </td>
+                                <td>
+                                    <small
+                                        class='label label-warning'><?=$mapel['tampil_pg']?>/<?=$mapel['jml_soal']?></small>
+                                    <small class='label label-danger'><?=$mapel['bobot_pg']?> %</small>
+                                    <small class='label label-danger'><?=$mapel['opsi']?> opsi</small>
+                                </td>
+                                <td>
+                                    <small
+                                        class='label label-warning'><?=$mapel['tampil_esai']?>/<?=$mapel['jml_esai']?></small>
+                                    <small class='label label-danger'><?=$mapel['bobot_esai']?> %</small>
+                                </td>
+                                <td>
+                                    <?php
 $dataArray = unserialize($mapel['kelas']);
 foreach ($dataArray as $key => $value):
     echo "<small class='label label-success'>$value </small>&nbsp;";
 endforeach;
 ?>
-										</td>
-										<?php
+                                </td>
+                                <?php
 if ($cek != 0) {
     if ($mapel['status'] == '0'):
         $status = '<label class="label label-danger">non aktif</label>';
@@ -171,106 +177,120 @@ if ($cek != 0) {
 }
 $guruku = mysqli_fetch_array(mysqli_query($koneksi, "SELECT * FROM pengawas WHERE id_pengawas = '$mapel[idguru]'"));
 ?>
-										<td>
-											<small class='label label-primary'><?=$guruku['nama']?></small>
-										</td>
-										<td style="text-align:center">
-											<?=$status?>
-										</td>
-										<?php if ($setting['server'] == 'pusat'): ?>
-											<td style="text-align:center">
-												<div class=''>
-													<a href='?pg=<?=$pg?>&ac=lihat&id=<?=$mapel['id_mapel']?>'><button class='btn btn-flat btn-success btn-flat btn-xs'><i class='fa fa-search'></i></button></a>
-													<a href='?pg=<?=$pg?>&ac=importsoal&id=<?=$mapel['id_mapel']?>'><button class='btn btn-info btn-flat btn-xs'><i class='fa fa-upload'></i></button></a>
-													<a><button class='btn btn-warning btn-flat btn-xs' data-toggle='modal' data-target='#editbanksoal<?=$mapel['id_mapel']?>'><i class='fa fa-edit'></i></button></a>
-												</div>
-											</td>
-										<?php endif?>
-									</tr>
-									<div class='modal fade' id='editbanksoal<?=$mapel['id_mapel']?>' style='display: none;'>
-										<div class='modal-dialog'>
-											<div class='modal-content'>
-												<div class='modal-header bg-blue'>
-													<button class='close' data-dismiss='modal'><span aria-hidden='true'><i class='glyphicon glyphicon-remove'></i></span></button>
-													<h3 class='modal-title'>Edit Bank Soal</h3>
-												</div>
-												<form action='' method='post'>
-													<div class='modal-body'>
-														<input type='hidden' id='idm' name='idm' value='<?=$mapel['id_mapel']?>' />
-														<div class='form-group'>
-															<label>Mata Pelajaran</label>
-															<select name='nama' class='form-control' required='true'>
-																<option value=''></option>
-																<?php
+                                <td>
+                                    <small class='label label-primary'><?=$guruku['nama']?></small>
+                                </td>
+                                <td style="text-align:center">
+                                    <?=$status?>
+                                </td>
+                                <?php if ($setting['server'] == 'pusat'): ?>
+                                <td style="text-align:center">
+                                    <div class=''>
+                                        <a href='?pg=<?=$pg?>&ac=lihat&id=<?=$mapel['id_mapel']?>'><button
+                                                class='btn btn-flat btn-success btn-flat btn-xs'><i
+                                                    class='fa fa-search'></i></button></a>
+                                        <a href='?pg=<?=$pg?>&ac=importsoal&id=<?=$mapel['id_mapel']?>'><button
+                                                class='btn btn-info btn-flat btn-xs'><i
+                                                    class='fa fa-upload'></i></button></a>
+                                        <a><button class='btn btn-warning btn-flat btn-xs' data-toggle='modal'
+                                                data-target='#editbanksoal<?=$mapel['id_mapel']?>'><i
+                                                    class='fa fa-edit'></i></button></a>
+                                    </div>
+                                </td>
+                                <?php endif?>
+                            </tr>
+                            <div class='modal fade' id='editbanksoal<?=$mapel['id_mapel']?>' style='display: none;'>
+                                <div class='modal-dialog'>
+                                    <div class='modal-content'>
+                                        <div class='modal-header bg-blue'>
+                                            <button class='close' data-dismiss='modal'><span aria-hidden='true'><i
+                                                        class='glyphicon glyphicon-remove'></i></span></button>
+                                            <h3 class='modal-title'>Edit Bank Soal</h3>
+                                        </div>
+                                        <form action='' method='post'>
+                                            <div class='modal-body'>
+                                                <input type='hidden' id='idm' name='idm'
+                                                    value='<?=$mapel['id_mapel']?>' />
+                                                <div class='form-group'>
+                                                    <label>Mata Pelajaran</label>
+                                                    <select name='nama' class='form-control' required='true'>
+                                                        <option value=''></option>
+                                                        <?php
 $pkQ                                                                               = mysqli_query($koneksi, "SELECT * FROM mata_pelajaran ORDER BY nama_mapel ASC");
 while ($pk = mysqli_fetch_array($pkQ)): ($pk['kode_mapel'] == $mapel['nama']) ? $s = 'selected' : $s = '';
     echo "<option value='$pk[kode_mapel]' $s>$pk[nama_mapel]</option>";
 endwhile;
 ?>
-															</select>
-														</div>
-														<?php if ($setting['jenjang'] == 'SMK'): ?>
-															<div class='form-group'>
-																<label>Program Keahlian</label>
-																<select name='id_pk' class='form-control' required='true'>
-																	<option value='semua'>Semua</option>
-																	<?php
+                                                    </select>
+                                                </div>
+                                                <?php if ($setting['jenjang'] == 'SMK'): ?>
+                                                <div class='form-group'>
+                                                    <label>Program Keahlian</label>
+                                                    <select name='id_pk' class='form-control' required='true'>
+                                                        <option value='semua'>Semua</option>
+                                                        <?php
 $pkQ                                                                          = mysqli_query($koneksi, "SELECT * FROM pk ORDER BY program_keahlian ASC");
 while ($pk = mysqli_fetch_array($pkQ)): ($pk['id_pk'] == $mapel['idpk']) ? $s = 'selected' : $s = '';
     echo "<option value='$pk[id_pk]' $s>$pk[program_keahlian]</option>";
 endwhile;
 ?>
-																</select>
-															</div>
-														<?php endif;?>
-														<div class='form-group'>
-															<div class='row'>
-																<div class='col-md-6'>
-																	<label>Pilih Level</label>
-																	<select name='level' class='form-control' required='true'>
-																		<option value='semua'>Semua Level</option>
-																		<?php
+                                                    </select>
+                                                </div>
+                                                <?php endif;?>
+                                                <div class='form-group'>
+                                                    <div class='row'>
+                                                        <div class='col-md-6'>
+                                                            <label>Pilih Level</label>
+                                                            <select name='level' class='form-control' required='true'>
+                                                                <option value='semua'>Semua Level</option>
+                                                                <?php
 $lev                                                                                      = mysqli_query($koneksi, "SELECT * FROM level");
 while ($level = mysqli_fetch_array($lev)): ($level['kode_level'] == $mapel['level']) ? $s = 'selected' : $s = '';
     echo "<option value='$level[kode_level]' $s>$level[kode_level]</option>";
 endwhile;
 ?>
-																	</select>
-																</div>
-																<div class='col-md-6'>
-																	<label>Pilih Kelas</label><br>
-																	<select name='kelas[]' class='form-control select2' style='width:100%' multiple required='true'>
-																		<option value='semua'>Semua Kelas</option>
-																		<?php $lev = mysqli_query($koneksi, "SELECT * FROM kelas");?>
-																		<?php while ($kelas = mysqli_fetch_array($lev)): ?>
-																			<?php if (in_array($kelas['id_kelas'], unserialize($mapel['kelas']))): ?>
-																				<option value="<?=$kelas['id_kelas']?>" selected><?=$kelas['id_kelas']?></option>"
-																			<?php else: ?>
-																				<option value="<?=$kelas['id_kelas']?>"><?=$kelas['id_kelas']?></option>"
-																			<?php endif;?>
-																		<?php endwhile?>
-																	</select>
-																</div>
-															</div>
-														</div>
-														<div class='form-group'>
-															<div class='row'>
-																<div class='col-md-3'>
-																	<label>Jumlah Soal PG</label>
-																	<input type='number' name='jml_soal' class='form-control' value="<?=$mapel['jml_soal']?>" required='true' />
-																</div>
-																<div class='col-md-3'>
-																	<label>Bobot Soal PG %</label>
-																	<input type='number' name='bobot_pg' class='form-control' value="<?=$mapel['bobot_pg']?>" required='true' />
-																</div>
-																<div class='col-md-3'>
-																	<label>Soal Tampil</label>
-																	<input type='number' name='tampil_pg' class='form-control' value="<?=$mapel['tampil_pg']?>" required='true' />
-																</div>
-																<div class='col-md-3'>
-																	<label>Opsi</label>
-																	<select name='opsi' class='form-control'>
-																		<?php
+                                                            </select>
+                                                        </div>
+                                                        <div class='col-md-6'>
+                                                            <label>Pilih Kelas</label><br>
+                                                            <select name='kelas[]' class='form-control select2'
+                                                                style='width:100%' multiple required='true'>
+                                                                <option value='semua'>Semua Kelas</option>
+                                                                <?php $lev = mysqli_query($koneksi, "SELECT * FROM kelas");?>
+                                                                <?php while ($kelas = mysqli_fetch_array($lev)): ?>
+                                                                <?php if (in_array($kelas['id_kelas'], unserialize($mapel['kelas']))): ?>
+                                                                <option value="<?=$kelas['id_kelas']?>" selected>
+                                                                    <?=$kelas['id_kelas']?></option>"
+                                                                <?php else: ?>
+                                                                <option value="<?=$kelas['id_kelas']?>">
+                                                                    <?=$kelas['id_kelas']?></option>"
+                                                                <?php endif;?>
+                                                                <?php endwhile?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class='form-group'>
+                                                    <div class='row'>
+                                                        <div class='col-md-3'>
+                                                            <label>Jumlah Soal PG</label>
+                                                            <input type='number' name='jml_soal' class='form-control'
+                                                                value="<?=$mapel['jml_soal']?>" required='true' />
+                                                        </div>
+                                                        <div class='col-md-3'>
+                                                            <label>Bobot Soal PG %</label>
+                                                            <input type='number' name='bobot_pg' class='form-control'
+                                                                value="<?=$mapel['bobot_pg']?>" required='true' />
+                                                        </div>
+                                                        <div class='col-md-3'>
+                                                            <label>Soal Tampil</label>
+                                                            <input type='number' name='tampil_pg' class='form-control'
+                                                                value="<?=$mapel['tampil_pg']?>" required='true' />
+                                                        </div>
+                                                        <div class='col-md-3'>
+                                                            <label>Opsi</label>
+                                                            <select name='opsi' class='form-control'>
+                                                                <?php
 $opsi = array("3", "4", "5");
 for ($x = 0; $x < count($opsi); $x++) {
     if ($mapel['opsi'] == $opsi[$x]):
@@ -280,201 +300,212 @@ for ($x = 0; $x < count($opsi); $x++) {
     endif;
 }
 ?>
-																	</select>
-																</div>
-															</div>
-														</div>
-														<div class='form-group'>
-															<div class='row'>
-																<div class='col-md-4'>
-																	<label>Jumlah Soal Essai</label>
-																	<input type='number' name='jml_esai' class='form-control' value="<?=$mapel['jml_esai']?>" required='true' />
-																</div>
-																<div class='col-md-4'>
-																	<label>Bobot Soal Essai %</label>
-																	<input type='number' name='bobot_esai' class='form-control' value="<?=$mapel['bobot_esai']?>" required='true' />
-																</div>
-																<div class='col-md-4'>
-																	<label>Soal Tampil</label>
-																	<input type='number' name='tampil_esai' class='form-control' value="<?=$mapel['tampil_esai']?>" required='true' />
-																</div>
-															</div>
-														</div>
-														<div class='form-group'>
-															<div class='row'>
-																<?php if ($pengawas['level'] == 'admin'): ?>
-																	<div class='col-md-6'>
-																		<label>Guru Pengampu</label>
-																		<select name='guru' class='form-control' required='true'>
-																			<?php
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class='form-group'>
+                                                    <div class='row'>
+                                                        <div class='col-md-4'>
+                                                            <label>Jumlah Soal Essai</label>
+                                                            <input type='number' name='jml_esai' class='form-control'
+                                                                value="<?=$mapel['jml_esai']?>" required='true' />
+                                                        </div>
+                                                        <div class='col-md-4'>
+                                                            <label>Bobot Soal Essai %</label>
+                                                            <input type='number' name='bobot_esai' class='form-control'
+                                                                value="<?=$mapel['bobot_esai']?>" required='true' />
+                                                        </div>
+                                                        <div class='col-md-4'>
+                                                            <label>Soal Tampil</label>
+                                                            <input type='number' name='tampil_esai' class='form-control'
+                                                                value="<?=$mapel['tampil_esai']?>" required='true' />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class='form-group'>
+                                                    <div class='row'>
+                                                        <?php if ($pengawas['level'] == 'admin'): ?>
+                                                        <div class='col-md-6'>
+                                                            <label>Guru Pengampu</label>
+                                                            <select name='guru' class='form-control' required='true'>
+                                                                <?php
 $guruku = mysqli_query($koneksi, "SELECT * FROM pengawas where level='guru' order by nama asc");
 while ($guru = mysqli_fetch_array($guruku)) {
     ($guru['id_pengawas'] == $mapel['idguru']) ? $s = 'selected' : $s = '';
     echo "<option value='$guru[id_pengawas]' $s>$guru[nama]</option>";
 }
 ?>
-																		</select>
-																	</div>
-																<?php endif;?>
-																<div class='col-md-6'>
-																	<label>Status Soal</label>
-																	<select name='status' class='form-control' required='true'>
-																		<option value='1'>Aktif</option>
-																		<option value='0'>Non Aktif</option>
-																	</select>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class='modal-footer'>
-														<button type='submit' name='editbanksoal' class='btn btn-sm btn-flat btn-success'><i class='fa fa-check'></i> Simpan</button>
+                                                            </select>
+                                                        </div>
+                                                        <?php endif;?>
+                                                        <div class='col-md-6'>
+                                                            <label>Status Soal</label>
+                                                            <select name='status' class='form-control' required='true'>
+                                                                <option value='1'>Aktif</option>
+                                                                <option value='0'>Non Aktif</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class='modal-footer'>
+                                                <button type='submit' name='editbanksoal'
+                                                    class='btn btn-sm btn-flat btn-success'><i class='fa fa-check'></i>
+                                                    Simpan</button>
 
-													</div>
-												</form>
-											</div>
-										</div>
-									</div>
-								<?php endwhile;?>
-							</tbody>
-						</table>
-					</div>
-				</div><!-- /.box-body -->
-			</div><!-- /.box -->
-		</div>
-	</div>
-	<div class='modal fade' id='tambahbanksoal' style='display: none;'>
-		<div class='modal-dialog'>
-			<div class='modal-content'>
-				<div class='modal-header bg-blue'>
-					<button class='close' data-dismiss='modal'><span aria-hidden='true'><i class='glyphicon glyphicon-remove'></i></span></button>
-					<h3 class='modal-title'>Tambah Bank Soal</h3>
-				</div>
-				<form action='' method='post'>
-					<div class='modal-body'>
-						<div class='form-group'>
-							<label>Mata Pelajaran</label>
-							<select name='nama' class='form-control' required='true'>
-								<option value=''></option>";
-								<?php
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php endwhile;?>
+                        </tbody>
+                    </table>
+                </div>
+            </div><!-- /.box-body -->
+        </div><!-- /.box -->
+    </div>
+</div>
+<div class='modal fade' id='tambahbanksoal' style='display: none;'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header bg-blue'>
+                <button class='close' data-dismiss='modal'><span aria-hidden='true'><i
+                            class='glyphicon glyphicon-remove'></i></span></button>
+                <h3 class='modal-title'>Tambah Bank Soal</h3>
+            </div>
+            <form action='' method='post'>
+                <div class='modal-body'>
+                    <div class='form-group'>
+                        <label>Mata Pelajaran</label>
+                        <select name='nama' class='form-control' required='true'>
+                            <option value=''></option>";
+                            <?php
 $pkQ = mysqli_query($koneksi, "SELECT * FROM mata_pelajaran ORDER BY nama_mapel ASC");
 while ($pk = mysqli_fetch_array($pkQ)) {
     echo "<option value='$pk[kode_mapel]'>$pk[nama_mapel]</option>";
 }
 ?>
-							</select>
-						</div>
-						<?php if ($setting['jenjang'] == 'SMK'): ?>
-							<div class='form-group'>
-								<label>Program Keahlian</label>
-								<select name='id_pk' class='form-control' required='true'>
-									<option value='semua'>Semua</option>
-									<?php
+                        </select>
+                    </div>
+                    <?php if ($setting['jenjang'] == 'SMK'): ?>
+                    <div class='form-group'>
+                        <label>Program Keahlian</label>
+                        <select name='id_pk' class='form-control' required='true'>
+                            <option value='semua'>Semua</option>
+                            <?php
 $pkQ = mysqli_query($koneksi, "SELECT * FROM pk ORDER BY program_keahlian ASC");
 while ($pk = mysqli_fetch_array($pkQ)):
     echo "<option value='$pk[id_pk]'>$pk[program_keahlian]</option>";
 endwhile;
 ?>
-								</select>
-							</div>
-						<?php endif;?>
-						<div class='form-group'>
-							<div class='row'>
-								<div class='col-md-6'>
-									<label>Level Soal</label>
-									<select name='level' id='soallevel' class='form-control' required='true'>
-										<option value=''></option>
-										<option value='semua'>Semua</option>
-										<?php
+                        </select>
+                    </div>
+                    <?php endif;?>
+                    <div class='form-group'>
+                        <div class='row'>
+                            <div class='col-md-6'>
+                                <label>Level Soal</label>
+                                <select name='level' id='soallevel' class='form-control' required='true'>
+                                    <option value=''></option>
+                                    <option value='semua'>Semua</option>
+                                    <?php
 $lev = mysqli_query($koneksi, "SELECT * FROM level");
 while ($level = mysqli_fetch_array($lev)) {
     echo "<option value='$level[kode_level]'>$level[kode_level]</option>";
 }
 ?>
-									</select>
-								</div>
-								<div class='col-md-6'>
-									<label>Pilih Kelas</label><br>
-									<select name='kelas[]' id='soalkelas' class='form-control select2' multiple='multiple' style='width:100%' required='true'>
-									</select>
-								</div>
-							</div>
-						</div>
-						<div class='form-group'>
-							<div class='row'>
-								<div class='col-md-3'>
-									<label>Jumlah Soal PG</label>
-									<input type='number' id='soalpg' name='jml_soal' class='form-control' required='true' />
-								</div>
-								<div class='col-md-3'>
-									<label>Bobot Soal PG %</label>
-									<input type='number' name='bobot_pg' class='form-control' required='true' />
-								</div>
-								<div class='col-md-3'>
-									<label>Soal Tampil</label>
-									<input type='number' id='tampilpg' name='tampil_pg' class='form-control' required='true' />
-								</div>
-								<div class='col-md-3'>
-									<label>Opsi</label>
-									<select name='opsi' class='form-control'>
-										<option value='3'>3</option>
-										<option value='4'>4</option>
-										<option value='5'>5</option>
-									</select>
-								</div>
-							</div>
-						</div>
-						<div class='form-group'>
-							<div class='row'>
-								<div class='col-md-4'>
-									<label>Jumlah Soal Essai</label>
-									<input type='number' id='soalesai' name='jml_esai' class='form-control' required='true' />
-								</div>
-								<div class='col-md-4'>
-									<label>Bobot Soal Essai %</label>
-									<input type='number' name='bobot_esai' class='form-control' required='true' />
-								</div>
-								<div class='col-md-4'>
-									<label>Soal Tampil</label>
-									<input type='number' id='tampilesai' name='tampil_esai' class='form-control' required='true' />
-								</div>
-							</div>
-						</div>
-						<div class='form-group'>
-							<div class='row'>
-								<?php if ($pengawas['level'] == 'admin'): ?>
-									<div class='col-md-6'>
-										<label>Guru Pengampu</label>
-										<select name='guru' class='form-control' required='true'>
-											<?php
+                                </select>
+                            </div>
+                            <div class='col-md-6'>
+                                <label>Pilih Kelas</label><br>
+                                <select name='kelas[]' id='soalkelas' class='form-control select2' multiple='multiple'
+                                    style='width:100%' required='true'>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='form-group'>
+                        <div class='row'>
+                            <div class='col-md-3'>
+                                <label>Jumlah Soal PG</label>
+                                <input type='number' id='soalpg' name='jml_soal' class='form-control' required='true' />
+                            </div>
+                            <div class='col-md-3'>
+                                <label>Bobot Soal PG %</label>
+                                <input type='number' name='bobot_pg' class='form-control' required='true' />
+                            </div>
+                            <div class='col-md-3'>
+                                <label>Soal Tampil</label>
+                                <input type='number' id='tampilpg' name='tampil_pg' class='form-control'
+                                    required='true' />
+                            </div>
+                            <div class='col-md-3'>
+                                <label>Opsi</label>
+                                <select name='opsi' class='form-control'>
+                                    <option value='3'>3</option>
+                                    <option value='4'>4</option>
+                                    <option value='5'>5</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='form-group'>
+                        <div class='row'>
+                            <div class='col-md-4'>
+                                <label>Jumlah Soal Essai</label>
+                                <input type='number' id='soalesai' name='jml_esai' class='form-control'
+                                    required='true' />
+                            </div>
+                            <div class='col-md-4'>
+                                <label>Bobot Soal Essai %</label>
+                                <input type='number' name='bobot_esai' class='form-control' required='true' />
+                            </div>
+                            <div class='col-md-4'>
+                                <label>Soal Tampil</label>
+                                <input type='number' id='tampilesai' name='tampil_esai' class='form-control'
+                                    required='true' />
+                            </div>
+                        </div>
+                    </div>
+                    <div class='form-group'>
+                        <div class='row'>
+                            <?php if ($pengawas['level'] == 'admin'): ?>
+                            <div class='col-md-6'>
+                                <label>Guru Pengampu</label>
+                                <select name='guru' class='form-control' required='true'>
+                                    <?php
 $guruku = mysqli_query($koneksi, "SELECT * FROM pengawas where level='guru' order by nama asc");
 while ($guru = mysqli_fetch_array($guruku)) {
     echo "<option value='$guru[id_pengawas]'>$guru[nama]</option>";
 }
 ?>
-										</select>
-									</div>
-								<?php endif;?>
-								<div class='col-md-6'>
-									<label>Status Soal</label>
-									<select name='status' class='form-control' required='true'>
-										<option value='1'>Aktif</option>
-										<option value='0'>Non Aktif</option>
-									</select>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class='modal-footer'>
-						<button type='submit' name='tambahsoal' class='btn btn-sm btn-flat btn-success'><i class='fa fa-check'></i> Simpan</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
+                                </select>
+                            </div>
+                            <?php endif;?>
+                            <div class='col-md-6'>
+                                <label>Status Soal</label>
+                                <select name='status' class='form-control' required='true'>
+                                    <option value='1'>Aktif</option>
+                                    <option value='0'>Non Aktif</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class='modal-footer'>
+                    <button type='submit' name='tambahsoal' class='btn btn-sm btn-flat btn-success'><i
+                            class='fa fa-check'></i> Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <?php elseif ($ac == 'input'): ?>
-	<?php include 'inputsmk.php';?>
+<?php include 'inputsmk.php';?>
 <?php elseif ($ac == 'hapusbank'): ?>
-	<?php
+<?php
 $exec   = mysqli_query($koneksi, "DELETE FROM soal WHERE id_mapel='$_GET[id]'");
 $gambar = mysqli_query($koneksi, "select * file_pendukung where id_mapel='$_GET[id]'");
 while ($file = mysqli_fetch_array($gambar)) {
@@ -485,7 +516,7 @@ $exec = mysqli_query($koneksi, "DELETE FROM file_pendukung WHERE id_mapel='$_GET
 jump(" ?pg=$pg&ac=lihat&id=$_GET[id]");
 ?>
 <?php elseif ($ac == 'lihat'): ?>
-	<?php
+<?php
 $id_mapel  = $_GET['id'];
 $namamapel = mysqli_fetch_array(mysqli_query($koneksi, "SELECT * FROM mapel WHERE id_mapel='$id_mapel'"));
 if ($namamapel['jml_esai'] == 0) {
@@ -494,36 +525,46 @@ if ($namamapel['jml_esai'] == 0) {
     $hide = '';
 }
 ?>
-	<div class='row'>
-		<div class='col-md-12'>
-			<div class='box box-solid'>
-				<div class='box-header with-border '>
-					<h3 class='box-title'>Daftar Soal <?=$namamapel['nama']?></h3>
-					<div class='box-tools pull-right '>
-						<a href='?pg=banksoal' class='btn btn-sm btn-flat btn-success'><i class='fa fa-angle-left'></i><span class='hidden-xs'> Bank Soal</span></a>
-						<a href='?pg=<?=$pg?>&ac=input&id=<?=$id_mapel?>&no=1&jenis=2' class='btn btn-sm btn-flat btn-success $hide'><i class='fa fa-plus'></i><span class='hidden-xs'> Tambah</span> Essai</a>
-						<a class='btn btn-sm btn-flat btn-success' href='soal_excel.php?m=<?=$id_mapel?>'><i class='fa fa-file-excel-o'></i><span class='hidden-xs'> Excel</span></a>
-						<button class='btn btn-sm btn-flat btn-success' onclick="frames['frameresult'].print()"><i class='fa fa-print'></i><span class='hidden-xs'> Print</span></button>
-						<a href='?pg=<?=$pg?>&ac=input&id=<?=$id_mapel?>&no=1&jenis=1' class='btn btn-sm btn-flat btn-success'><i class='fa fa-pen'></i><span class='hidden-xs'> Edit</span> PG</a>
-						<a href='?pg=banksoal&ac=importsoal&id=<?=$id_mapel?>' class='btn btn-sm btn-flat btn-info'><i class='fa fa-upload'></i><span class='hidden-xs'> Import</span></a>
-						<a href='?pg=<?=$pg?>&ac=hapusbank&id=<?=$id_mapel?>' class='btn btn-sm btn-danger'><i class='fa fa-trash'></i><span class='hidden-xs'> Kosongkan </span></a>
-						<iframe name='frameresult' src='cetaksoal.php?id=<?=$id_mapel?>' style='border:none;width:1px;height:1px;'></iframe>
-					</div>
-				</div><!-- /.box-header -->
-				<div class='box-body'>
-					<div class='table-responsive'>
-						<b>A. Soal Pilihan Ganda</b>
-						<table class='table table-bordered table-striped'>
-							<tbody>
-								<?php $soalq = mysqli_query($koneksi, "SELECT * FROM soal where id_mapel='$id_mapel' and jenis='1' order by nomor ");?>
-								<?php while ($soal = mysqli_fetch_array($soalq)): ?>
+<div class='row'>
+    <div class='col-md-12'>
+        <div class='box box-solid'>
+            <div class='box-header with-border '>
+                <h3 class='box-title'>Daftar Soal <?=$namamapel['nama']?></h3>
+                <div class='box-tools pull-right '>
+                    <a href='?pg=banksoal' class='btn btn-sm btn-flat btn-success'><i class='fa fa-angle-left'></i><span
+                            class='hidden-xs'> Bank Soal</span></a>
+                    <a href='?pg=<?=$pg?>&ac=input&id=<?=$id_mapel?>&no=1&jenis=2'
+                        class='btn btn-sm btn-flat btn-success $hide'><i class='fa fa-plus'></i><span class='hidden-xs'>
+                            Tambah</span> Essai</a>
+                    <a class='btn btn-sm btn-flat btn-success' href='soal_excel.php?m=<?=$id_mapel?>'><i
+                            class='fa fa-file-excel-o'></i><span class='hidden-xs'> Excel</span></a>
+                    <button class='btn btn-sm btn-flat btn-success' onclick="frames['frameresult'].print()"><i
+                            class='fa fa-print'></i><span class='hidden-xs'> Print</span></button>
+                    <a href='?pg=<?=$pg?>&ac=input&id=<?=$id_mapel?>&no=1&jenis=1'
+                        class='btn btn-sm btn-flat btn-success'><i class='fa fa-pen'></i><span class='hidden-xs'>
+                            Edit</span> PG</a>
+                    <a href='?pg=banksoal&ac=importsoal&id=<?=$id_mapel?>' class='btn btn-sm btn-flat btn-info'><i
+                            class='fa fa-upload'></i><span class='hidden-xs'> Import</span></a>
+                    <a href='?pg=<?=$pg?>&ac=hapusbank&id=<?=$id_mapel?>' class='btn btn-sm btn-danger'><i
+                            class='fa fa-trash'></i><span class='hidden-xs'> Kosongkan </span></a>
+                    <iframe name='frameresult' src='cetaksoal.php?id=<?=$id_mapel?>'
+                        style='border:none;width:1px;height:1px;'></iframe>
+                </div>
+            </div><!-- /.box-header -->
+            <div class='box-body'>
+                <div class='table-responsive'>
+                    <b>A. Soal Pilihan Ganda</b>
+                    <table class='table table-bordered table-striped'>
+                        <tbody>
+                            <?php $soalq = mysqli_query($koneksi, "SELECT * FROM soal where id_mapel='$id_mapel' and jenis='1' order by nomor ");?>
+                            <?php while ($soal = mysqli_fetch_array($soalq)): ?>
 
-									<tr>
-										<td style='width:30px'>
-											<?=$soal['nomor']?>
-										</td>
-										<td style="text-align:justify">
-											<?php
+                            <tr>
+                                <td style='width:30px'>
+                                    <?=$soal['nomor']?>
+                                </td>
+                                <td style="text-align:justify">
+                                    <?php
 if ($soal['file'] != ''):
     $audio = array('mp3', 'wav', 'ogg', 'MP3', 'WAV', 'OGG');
     $image = array('jpg', 'jpeg', 'png', 'gif', 'bmp', 'JPG', 'JPEG', 'PNG', 'GIF', 'BMP');
@@ -538,8 +579,8 @@ if ($soal['file'] != ''):
 }
 endif;
 ?>
-											<?=$soal['soal'];?>
-											<?php
+                                    <?=$soal['soal'];?>
+                                    <?php
 if ($soal['file1'] != ''):
     $audio = array('mp3', 'wav', 'ogg', 'MP3', 'WAV', 'OGG');
     $image = array('jpg', 'jpeg', 'png', 'gif', 'bmp', 'JPG', 'JPEG', 'PNG', 'GIF', 'BMP');
@@ -554,11 +595,11 @@ if ($soal['file1'] != ''):
 }
 endif;
 ?>
-											<table width=100%>
-												<tr>
-													<td style="padding: 3px;width: 2%; vertical-align: text-top;">A.</td>
-													<td style="padding: 3px;width: 31%; vertical-align: text-top;">
-														<?php
+                                    <table width=100%>
+                                        <tr>
+                                            <td style="padding: 3px;width: 2%; vertical-align: text-top;">A.</td>
+                                            <td style="padding: 3px;width: 31%; vertical-align: text-top;">
+                                                <?php
 if ($soal['pilA'] != '') {
     echo "$soal[pilA] ";
 }
@@ -579,10 +620,10 @@ if ($soal['fileA'] != '') {
     }
 }
 ?>
-													</td>
-													<td style="padding: 3px;width: 2%; vertical-align: text-top;">C.</td>
-													<td style="padding: 3px;width: 31%; vertical-align: text-top;">
-														<?php
+                                            </td>
+                                            <td style="padding: 3px;width: 2%; vertical-align: text-top;">C.</td>
+                                            <td style="padding: 3px;width: 31%; vertical-align: text-top;">
+                                                <?php
 if (!$soal['pilC'] == "") {
     echo "$soal[pilC] ";
 }
@@ -603,11 +644,11 @@ if ($soal['fileC'] != '') {
     }
 }
 ?>
-													</td>
-													<?php if ($namamapel['opsi'] == 5): ?>
-														<td style="padding: 3px;width: 2%; vertical-align: text-top;">E.</td>
-														<td style="padding: 3px; vertical-align: text-top;">
-															<?php
+                                            </td>
+                                            <?php if ($namamapel['opsi'] == 5): ?>
+                                            <td style="padding: 3px;width: 2%; vertical-align: text-top;">E.</td>
+                                            <td style="padding: 3px; vertical-align: text-top;">
+                                                <?php
 if (!$soal['pilE'] == "") {
     echo "$soal[pilE] ";
 }
@@ -628,13 +669,13 @@ if ($soal['fileE'] != '') {
     }
 }
 ?>
-														</td>
-													<?php endif;?>
-												</tr>
-												<tr>
-													<td style="padding: 3px;width: 2%; vertical-align: text-top;">B.</td>
-													<td style="padding: 3px;width: 31%; vertical-align: text-top;">
-														<?php
+                                            </td>
+                                            <?php endif;?>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 3px;width: 2%; vertical-align: text-top;">B.</td>
+                                            <td style="padding: 3px;width: 31%; vertical-align: text-top;">
+                                                <?php
 if (!$soal['pilB'] == "") {
     echo "$soal[pilB] ";
 }
@@ -655,11 +696,11 @@ if ($soal['fileB'] != '') {
     }
 }
 ?>
-													</td>
-													<?php if ($namamapel['opsi'] != 3): ?>
-														<td style="padding: 3px;width: 2%; vertical-align: text-top;">D.</td>
-														<td style="padding: 3px;width: 31%; vertical-align: text-top;">
-															<?php
+                                            </td>
+                                            <?php if ($namamapel['opsi'] != 3): ?>
+                                            <td style="padding: 3px;width: 2%; vertical-align: text-top;">D.</td>
+                                            <td style="padding: 3px;width: 31%; vertical-align: text-top;">
+                                                <?php
 if (!$soal['pilD'] == "") {
     echo "$soal[pilD] ";
 }
@@ -680,61 +721,68 @@ if ($soal['fileD'] != '') {
     }
 }
 ?>
-														</td>
-													<?php endif;?>
-												</tr>
+                                            </td>
+                                            <?php endif;?>
+                                        </tr>
 
-											</table>
-										</td>
-										<td style='width:30px'>
-											<a><button class='btn bg-maroon btn-sm' data-toggle='modal' data-target="#hapus<?=$soal['id_soal']?>"><i class='fa fa-trash'></i></button></a>
-										</td>
-									</tr>
-									<?php
+                                    </table>
+                                </td>
+                                <td style='width:30px'>
+                                    <a><button class='btn bg-maroon btn-sm' data-toggle='modal'
+                                            data-target="#hapus<?=$soal['id_soal']?>"><i
+                                                class='fa fa-trash'></i></button></a>
+                                </td>
+                            </tr>
+                            <?php
 $info = info("Anda yakin akan menghapus soal ini ?");
 if (isset($_POST['hapus'])) {
     $exec = mysqli_query($koneksi, "DELETE FROM soal WHERE id_soal = '$_REQUEST[idu]'");
     (!$exec) ? info("Gagal menyimpan", "NO") : jump("?pg=$pg&ac=$ac&id=$id_mapel");
 }
 ?>
-									<div class='modal fade' id="hapus<?=$soal['id_soal']?>" style='display: none;'>
-										<div class='modal-dialog'>
-											<div class='modal-content'>
-												<div class='modal-header bg-maroon'>
-													<button class='close' data-dismiss='modal'><span aria-hidden='true'><i class='glyphicon glyphicon-remove'></i></span></button>
-													<h3 class='modal-title'>Hapus Soal</h3>
-												</div>
-												<div class='modal-body'>
-													<form action='' method='post'>
-														<input type='hidden' id='idu' name='idu' value="<?=$soal['id_soal']?>" />
-														<div class='callout '>
-															<h4><?=$info?></h4>
-														</div>
-														<div class='modal-footer'>
-															<div class='box-tools pull-right '>
-																<button type='submit' name='hapus' class='btn btn-sm bg-maroon'><i class='fa fa-trash-o'></i> Hapus</button>
-																<button type='button' class='btn btn-default btn-sm pull-left' data-dismiss='modal'>Close</button>
-															</div>
-														</div>
-													</form>
-												</div>
-											</div>
-										</div>
-									</div>
-								<?php endwhile;?>
-							</tbody>
-						</table>
-						<b>B. Soal Essai</b>
-						<table class='table table-bordered table-striped'>
-							<tbody>
-								<?php $soalq = mysqli_query($koneksi, "SELECT * FROM soal where id_mapel='$id_mapel' and jenis='2' order by nomor ");?>
-								<?php while ($soal = mysqli_fetch_array($soalq)): ?>
-									<tr>
-										<td style='width:30px'>
-											<?=$soal['nomor']?>
-										</td>
-										<td style="text-align:justify">
-											<?php
+                            <div class='modal fade' id="hapus<?=$soal['id_soal']?>" style='display: none;'>
+                                <div class='modal-dialog'>
+                                    <div class='modal-content'>
+                                        <div class='modal-header bg-maroon'>
+                                            <button class='close' data-dismiss='modal'><span aria-hidden='true'><i
+                                                        class='glyphicon glyphicon-remove'></i></span></button>
+                                            <h3 class='modal-title'>Hapus Soal</h3>
+                                        </div>
+                                        <div class='modal-body'>
+                                            <form action='' method='post'>
+                                                <input type='hidden' id='idu' name='idu'
+                                                    value="<?=$soal['id_soal']?>" />
+                                                <div class='callout '>
+                                                    <h4><?=$info?></h4>
+                                                </div>
+                                                <div class='modal-footer'>
+                                                    <div class='box-tools pull-right '>
+                                                        <button type='submit' name='hapus'
+                                                            class='btn btn-sm bg-maroon'><i class='fa fa-trash-o'></i>
+                                                            Hapus</button>
+                                                        <button type='button' class='btn btn-default btn-sm pull-left'
+                                                            data-dismiss='modal'>Close</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php endwhile;?>
+                        </tbody>
+                    </table>
+                    <b>B. Soal Essai</b>
+                    <table class='table table-bordered table-striped'>
+                        <tbody>
+                            <?php $soalq = mysqli_query($koneksi, "SELECT * FROM soal where id_mapel='$id_mapel' and jenis='2' order by nomor ");?>
+                            <?php while ($soal = mysqli_fetch_array($soalq)): ?>
+                            <tr>
+                                <td style='width:30px'>
+                                    <?=$soal['nomor']?>
+                                </td>
+                                <td style="text-align:justify">
+                                    <?php
 if ($soal['file'] != ''):
     $audio = array('mp3', 'wav', 'ogg', 'MP3', 'WAV', 'OGG');
     $image = array('jpg', 'jpeg', 'png', 'gif', 'bmp', 'JPG', 'JPEG', 'PNG', 'GIF', 'BMP');
@@ -749,8 +797,8 @@ if ($soal['file'] != ''):
 }
 endif;
 ?>
-											<?=$soal['soal'];?>
-											<?php
+                                    <?=$soal['soal'];?>
+                                    <?php
 if ($soal['file1'] != ''):
     $audio = array('mp3', 'wav', 'ogg', 'MP3', 'WAV', 'OGG');
     $image = array('jpg', 'jpeg', 'png', 'gif', 'bmp', 'JPG', 'JPEG', 'PNG', 'GIF', 'BMP');
@@ -765,52 +813,59 @@ if ($soal['file1'] != ''):
 }
 endif;
 ?>
-										</td>
-										<td style='width:30px'>
-											<a><button class='btn bg-maroon btn-sm' data-toggle='modal' data-target="#hapus<?=$soal['id_soal']?>"><i class='fa fa-trash'></i></button></a>
-										</td>
-									</tr>
-									<?php
+                                </td>
+                                <td style='width:30px'>
+                                    <a><button class='btn bg-maroon btn-sm' data-toggle='modal'
+                                            data-target="#hapus<?=$soal['id_soal']?>"><i
+                                                class='fa fa-trash'></i></button></a>
+                                </td>
+                            </tr>
+                            <?php
 $info = info("Anda yakin akan menghapus soal ini ?");
 if (isset($_POST['hapus'])) {
     $exec = mysqli_query($koneksi, "DELETE FROM soal WHERE id_soal = '$_REQUEST[idu]'");
     (!$exec) ? info("Gagal menyimpan", "NO") : jump("?pg=$pg&ac=$ac&id=$id_mapel");
 }
 ?>
-									<div class='modal fade' id="hapus<?=$soal['id_soal']?>" style='display: none;'>
-										<div class='modal-dialog'>
-											<div class='modal-content'>
-												<div class='modal-header bg-maroon'>
-													<button class='close' data-dismiss='modal'><span aria-hidden='true'><i class='glyphicon glyphicon-remove'></i></span></button>
-													<h3 class='modal-title'>Hapus Soal</h3>
-												</div>
-												<div class='modal-body'>
-													<form action='' method='post'>
-														<input type='hidden' id='idu' name='idu' value="<?=$soal['id_soal']?>" />
-														<div class='callout callout-warning'>
-															<h4><?=$info?></h4>
-														</div>
-														<div class='modal-footer'>
-															<div class='box-tools pull-right '>
-																<button type='submit' name='hapus' class='btn btn-sm bg-maroon'><i class='fa fa-trash-o'></i> Hapus</button>
-																<button type='button' class='btn btn-default btn-sm pull-left' data-dismiss='modal'>Close</button>
-															</div>
-														</div>
-													</form>
-												</div>
-											</div>
-										</div>
-									</div>
-								<?php endwhile;?>
-							</tbody>
-						</table>
-					</div>
-				</div><!-- /.box-body -->
-			</div><!-- /.box -->
-		</div>
-	</div>
+                            <div class='modal fade' id="hapus<?=$soal['id_soal']?>" style='display: none;'>
+                                <div class='modal-dialog'>
+                                    <div class='modal-content'>
+                                        <div class='modal-header bg-maroon'>
+                                            <button class='close' data-dismiss='modal'><span aria-hidden='true'><i
+                                                        class='glyphicon glyphicon-remove'></i></span></button>
+                                            <h3 class='modal-title'>Hapus Soal</h3>
+                                        </div>
+                                        <div class='modal-body'>
+                                            <form action='' method='post'>
+                                                <input type='hidden' id='idu' name='idu'
+                                                    value="<?=$soal['id_soal']?>" />
+                                                <div class='callout callout-warning'>
+                                                    <h4><?=$info?></h4>
+                                                </div>
+                                                <div class='modal-footer'>
+                                                    <div class='box-tools pull-right '>
+                                                        <button type='submit' name='hapus'
+                                                            class='btn btn-sm bg-maroon'><i class='fa fa-trash-o'></i>
+                                                            Hapus</button>
+                                                        <button type='button' class='btn btn-default btn-sm pull-left'
+                                                            data-dismiss='modal'>Close</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php endwhile;?>
+                        </tbody>
+                    </table>
+                </div>
+            </div><!-- /.box-body -->
+        </div><!-- /.box -->
+    </div>
+</div>
 <?php elseif ($ac == 'hapusfile'): ?>
-	<?php
+<?php
 $jenis = $_GET['jenis'];
 $id    = $_GET['id'];
 $file  = $_GET['file'];
@@ -820,6 +875,6 @@ mysqli_query($koneksi, "UPDATE soal SET $file='' WHERE id_soal='$id'");
 jump("?pg=$pg&ac=input&paket=$soal[paket]&id=$soal[id_mapel]&no=$soal[nomor]&jenis=$jenis");
 ?>
 <?php elseif ($ac == 'importsoal'): ?>
-	<?php include "import_soal.php";?>
+<?php include "import_soal.php";?>
 
 <?php endif;?>

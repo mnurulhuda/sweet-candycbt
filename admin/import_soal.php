@@ -266,7 +266,7 @@ if (isset($output)) {
                 if (obj.status == 1) {
                     swal({
                         type: 'success',
-                        title: 'Selamat!',
+                        title: 'Import Sukses!',
                         text: obj.hasil
                     }).then(function() {
                         window.location = "index.php?pg=banksoal&ac=lihat&id="+obj.id_mapel;
